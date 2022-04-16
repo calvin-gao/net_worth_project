@@ -1,0 +1,15 @@
+.idea
+.env
+node_modules/
+dist/
+
+.env
+venv
+.venv
+.coverahe
+pip-log.txt
+__pycache__
+*.sqlite
+static
+.vscode
+media/

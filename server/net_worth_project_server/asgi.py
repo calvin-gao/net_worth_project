@@ -1,5 +1,5 @@
 """
-ASGI config for net_worth_project project.
+ASGI config for net_worth_project_server project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'net_worth_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'net_worth_project_server.settings')
 
 application = get_asgi_application()

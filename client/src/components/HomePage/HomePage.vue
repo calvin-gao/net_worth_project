@@ -33,16 +33,17 @@ const total = ref(new Total(runningSum))
 console.log(runningSum.value);
 
 watch( 
-    () => assets,
+    assets,
     (newAssets , oldAssets) => {
-        if (newAssets.value.length > oldAssets.value.length){
+        //if (newAssets.value.length > oldAssets.value.length){
             let runningSum = ref(0.0);
-            for( let i = 0 ; i < assets.value.length; i++){
+            console.log(oldAssets)
+            for( let i = 0 ; i < newAssets.length; i++){
                 runningSum.value = runningSum.value + assets.value[i].amount
             }
             const total = ref(new Total(runningSum))
-            console.log(total)
-        }
+            console.log("The total" + total.value)
+        //}
     },
     {deep : true}
 )

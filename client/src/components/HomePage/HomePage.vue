@@ -16,7 +16,7 @@
 <script setup>
 import { Asset , Total } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
-import { ref } from 'vue';
+import { ref , watch } from 'vue';
 
 const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);
 
@@ -31,6 +31,23 @@ for( let i = 0 ; i < assets.value.length; i++){
 
 const total = ref(new Total(runningSum))
 console.log(runningSum.value);
+
+watch( 
+    () => assets,
+    (newAssets , oldAssets) => {
+        if (newAssets.value.length > oldAssets.value.length){
+            let runningSum = ref(0.0);
+            for( let i = 0 ; i < assets.value.length; i++){
+                runningSum.value = runningSum.value + assets.value[i].amount
+            }
+            const total = ref(new Total(runningSum))
+            console.log(total)
+        }
+    },
+    {deep : true}
+)
+    
+
 
 </script>
 

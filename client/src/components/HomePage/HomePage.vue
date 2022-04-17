@@ -6,7 +6,7 @@
     {{ item.name }} - {{ item.amount }}
 </li>
 
-<!-- <h1>The current runningSum is {{ $globalData.runningSum }}} </h1> -->
+<h1>The current runningSum is {{ total.currentSum }} </h1> 
 
 
 <AssetForm @add-assets="addAssets" />
@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { Asset } from '../../assets/helper/constants.js';
+import { Asset , Total } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import { ref } from 'vue';
 
@@ -24,13 +24,13 @@ const addAssets = (asset) => {
     assets.value.push(asset);
 }
 
-let runningSum = 0.0;
+let runningSum = ref(0.0);
 for( let i = 0 ; i < assets.value.length; i++){
-    console.log(assets.value)
-    runningSum = runningSum + assets.value
+    runningSum.value = runningSum.value + assets.value[i].amount
 }
 
-//console.log(runningSum);
+const total = ref(new Total(runningSum))
+console.log(runningSum.value);
 
 </script>
 

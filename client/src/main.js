@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 // import HelloWorld from './components/HelloWorld.vue';
 import HomePage from './components/HomePage/HomePage.vue';
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
     { path: '/', component: HomePage },
@@ -11,7 +11,8 @@ const routes = [
   ]
   
 const router = createRouter({
-    history: createWebHashHistory(),
+    mode: 'history',
+    history: createWebHistory(),
     routes, // short for `routes: routes`
 })
 

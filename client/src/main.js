@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp} from 'vue';
 import App from './App.vue';
 // import HelloWorld from './components/HelloWorld.vue';
 import HomePage from './components/HomePage/HomePage.vue';
@@ -15,5 +15,8 @@ const router = createRouter({
     history: createWebHistory(),
     routes, // short for `routes: routes`
 })
+let app = createApp(App);
+console.log(app)
+app.use(router).mount('#app')
+// app.config.globalProperties.$runningSum = 0.0
 
-createApp(App).use(router).mount('#app')

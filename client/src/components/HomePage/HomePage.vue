@@ -6,6 +6,9 @@
     {{ item.name }} - {{ item.amount }}
 </li>
 
+<!-- <h1>The current runningSum is {{ $globalData.runningSum }}} </h1> -->
+
+
 <AssetForm @add-assets="addAssets" />
 
 </template>
@@ -20,6 +23,15 @@ const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new
 const addAssets = (asset) => {
     assets.value.push(asset);
 }
+
+let runningSum = 0.0;
+for( let i = 0 ; i < assets.value.length; i++){
+    console.log(assets.value)
+    runningSum = runningSum + assets.value
+}
+
+//console.log(runningSum);
+
 </script>
 
 <style>

@@ -5,8 +5,8 @@
             <input type="text" class="form-control" v-model="name" placeholder="Name" />
         </div>
         <div class="form-group">
-            <label>Percentage: </label>    
-            <input type="text" class="form-control" v-model.number="percentage" placeholder="Percentage" />   
+            <label>Amount: </label>    
+            <input type="text" class="form-control" v-model.number="amount" placeholder="Amount" />   
         </div>
     <button type="submit" class="btn btn-default">Submit</button>
 </form>
@@ -19,10 +19,10 @@ import { ref, defineEmits } from 'vue';
 const emit = defineEmits('add-assets');
 
 const name = ref('');
-const percentage = ref(0);
+const amount = ref(0);
 
 const addAssets = (event) => {
     event.preventDefault();
-    emit('add-assets', new Asset(name.value, percentage.value));
+    emit('add-assets', new Asset(name.value, amount.value));
 }
 </script>

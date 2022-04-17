@@ -6,8 +6,6 @@
     {{ item.name }} - {{ item.amount }}
 </li>
 
-<button type="submit" class="btn btn-default" @click="random">Submit</button>
-
 <AssetForm @add-assets="addAssets" />
 
 </template>

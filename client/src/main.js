@@ -1,10 +1,12 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import HelloWorld from './components/HelloWorld.vue';
+// import HelloWorld from './components/HelloWorld.vue';
+import HomePage from './components/HomePage/HomePage.vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
-    { path: '/', component: HelloWorld },
+    { path: '/', component: HomePage },
+    // { path: '/', component:  HelloWorld },
     // { path: '/about', component: About },
   ]
   

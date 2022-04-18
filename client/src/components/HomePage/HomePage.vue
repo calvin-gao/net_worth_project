@@ -14,38 +14,33 @@
 </template>
 
 <script setup>
-import { Asset , Total } from '../../assets/helper/constants.js';
+import { Asset, Total } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import { ref , watch } from 'vue';
 
 const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);
+const total = ref(new Total(0.0));
 
 const addAssets = (asset) => {
     assets.value.push(asset);
 }
 
-let runningSum = ref(0.0);
-for( let i = 0 ; i < assets.value.length; i++){
-    runningSum.value = runningSum.value + assets.value[i].amount
+const getRunningSum = (assets) => {
+    let runningSum = 0.0;
+    for( let i = 0 ; i < assets.length; i++){
+        runningSum = runningSum + assets[i].amount
+    }
+    return runningSum;
 }
 
-const total = ref(new Total(runningSum))
-console.log(runningSum.value);
+total.value.currentSum = getRunningSum(assets.value);
 
 watch( 
     assets,
-    (newAssets , oldAssets) => {
-        //if (newAssets.value.length > oldAssets.value.length){
-            let runningSum = ref(0.0);
-            console.log(oldAssets)
-            for( let i = 0 ; i < newAssets.length; i++){
-                runningSum.value = runningSum.value + assets.value[i].amount
-            }
-            const total = ref(new Total(runningSum))
-            console.log("The total" + total.value)
-        //}
+    (newAssets) => {
+        total.value.currentSum = getRunningSum(newAssets);
     },
-    {deep : true}
+    { deep: true }
 )
     
 

@@ -1,5 +1,4 @@
 <template>
-
     <h1>Hello Home Page</h1>
 
     <li v-for="(item, index) in assets" :key="index">
@@ -10,12 +9,14 @@
 
 
     <AssetForm @add-assets="addAssets" />
-
+    
+    <PieChart :assets="assets" />
 </template>
 
 <script setup>
 import { Asset, Total } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
+import PieChart from '../PieChart/PieChart.vue';
 import { ref, watch } from 'vue';
 
 const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);

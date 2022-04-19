@@ -2,6 +2,7 @@ import { createApp} from 'vue';
 import App from './App.vue';
 // import HelloWorld from './components/HelloWorld.vue';
 import HomePage from './components/HomePage/HomePage.vue';
+import VueApexCharts from "vue3-apexcharts";
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
@@ -17,6 +18,6 @@ const router = createRouter({
 })
 let app = createApp(App);
 console.log(app)
-app.use(router).mount('#app')
+app.use(router).use(VueApexCharts).mount('#app')
 // app.config.globalProperties.$runningSum = 0.0
 

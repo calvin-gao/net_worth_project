@@ -3,10 +3,9 @@
 </template>
 
 <script setup>
-import { defineProps, ref} from 'vue';
+import { defineProps, ref, watch} from 'vue';
 
 const props = defineProps(['assets']);
-console.log(props.assets);
 
 const chartOptions = ref({
     plotOptions: {
@@ -19,9 +18,18 @@ const chartOptions = ref({
             }
         }
     },
-    labels: ['Cash', 'Investments', 'Retirement', "Hell"],
+    labels: props.assets.map(asset => asset.name),
 });
-const series = ref([30, 40, 35, 50]);
+const series = ref(props.assets.map(asset => asset.amount));
+
+watch(
+    props.assets,
+    (newAssets) => {
+        series.value = newAssets.map(newAsset => newAsset.amount);
+        chartOptions.value = {...chartOptions.value, labels: newAssets.map(newAsset => newAsset.name)};
+    },
+    { deep: true }
+);
 
 </script>
 

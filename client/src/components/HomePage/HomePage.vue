@@ -11,19 +11,42 @@
     <AssetForm @add-assets="addAssets" />
     
     <PieChart :assets="assets" />
+
+    <!-- <div>
+        <apexchart
+        width="500"
+        type="bar"
+        :options="chartOptions"
+        :series="series"
+        ></apexchart>
+    </div> -->
 </template>
 
 <script setup>
 import { Asset, Total } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
-import PieChart from '../PieChart/PieChart.vue';
+import PieChart  from '../PieChart/PieChart.vue';
 import { ref, watch } from 'vue';
 
 const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);
 const total = ref(new Total(0.0));
 
 const addAssets = (asset) => {
-    assets.value.push(asset);
+
+    var isNewAsset = true;
+
+    assets.value.map(function(a){
+        if(a.name.toLowerCase() === asset.name.toLowerCase()){
+            isNewAsset = false;
+            a.amount += asset.amount;
+            return a;
+        }
+        return a;
+    });
+
+    if(isNewAsset){
+        assets.value.push(asset);
+    }
 }
 
 const getRunningSum = (assets) => {
@@ -43,6 +66,7 @@ watch(
     },
     { deep: true }
 );
+
 </script>
 
 <style>

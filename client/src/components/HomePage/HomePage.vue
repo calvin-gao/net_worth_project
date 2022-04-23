@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { Asset, Total } from '../../assets/helper/constants.js';
+import { Asset, Total, titleCase } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import PieChart  from '../PieChart/PieChart.vue';
 import { ref, watch } from 'vue';
@@ -32,21 +32,14 @@ const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new
 const total = ref(new Total(0.0));
 
 const addAssets = (asset) => {
-
-    var isNewAsset = true;
-
-    assets.value.map(function(a){
-        if(a.name.toLowerCase() === asset.name.toLowerCase()){
-            isNewAsset = false;
-            a.amount += asset.amount;
-            return a;
+    for (var i in assets.value) {
+        if (assets.value[i].name.toLowerCase() === asset.name.toLowerCase()) {
+            assets.value[i].amount += asset.amount;
+            return;
         }
-        return a;
-    });
-
-    if(isNewAsset){
-        assets.value.push(asset);
     }
+    asset.name = titleCase(asset.name);
+    assets.value.push(asset);
 }
 
 const getRunningSum = (assets) => {

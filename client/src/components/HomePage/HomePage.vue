@@ -3,14 +3,15 @@
 
     <li v-for="(item, index) in assets" :key="index">
         {{ item.name }} - {{ item.amount }}
+        <button @click="removeAsset(index)">Remove</button>
     </li>
 
     <h1>The current runningSum is {{ total.currentSum }} </h1>
 
 
-    <AssetForm @add-assets="addAssets" />
+    <AssetForm @add-assets="addAssets"/>
     
-    <PieChart :assets="assets" />
+    <PieChart :assets="assets"/>
 
     <!-- <div>
         <apexchart
@@ -40,6 +41,10 @@ const addAssets = (asset) => {
     }
     asset.name = titleCase(asset.name);
     assets.value.push(asset);
+}
+
+const removeAsset = (index) => {
+    assets.value.splice(index, 1);
 }
 
 const getRunningSum = (assets) => {

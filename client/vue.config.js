@@ -4,13 +4,13 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       // proxy all requests starting with /api to jsonplaceholder
-      '/api': {
-        target: 'localhost:8000',
+      '^/api': {
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/api'
-        }
-      }
+        secure:false,
+        pathRewrite: {'^/api': '/api'},
+        logLevel: 'debug'
+      },
     }
   }
 })

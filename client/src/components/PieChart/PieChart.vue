@@ -23,7 +23,7 @@ const chartOptions = ref({
 const series = ref(props.assets.map(asset => asset.amount));
 
 watch(
-    props.assets,
+    () => props.assets,
     (newAssets) => {
         series.value = newAssets.map(newAsset => newAsset.amount);
         chartOptions.value = {...chartOptions.value, labels: newAssets.map(newAsset => newAsset.name)};

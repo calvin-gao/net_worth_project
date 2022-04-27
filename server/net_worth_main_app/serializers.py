@@ -5,7 +5,6 @@ from django.contrib.auth import authenticate
 from .models import Asset
     
 class AssetSerializer(serializers.ModelSerializer):
-    
     def create(self, validated_data):
         user = self.context['request'].user
         prev_asset = Asset.objects.filter(user=user, name=validated_data['name'])
@@ -14,7 +13,6 @@ class AssetSerializer(serializers.ModelSerializer):
             prev_asset.amount += validated_data['amount']
             prev_asset.save(update_fields=['amount'])
             return prev_asset
-            
         else:
             asset = Asset.objects.create(user=user, **validated_data)
         return asset

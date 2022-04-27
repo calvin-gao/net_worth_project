@@ -30,6 +30,7 @@ class LoginAPI(generics.GenericAPIView):
 class AssetAPI(generics.ListCreateAPIView):
     serializer_class = AssetSerializer
     permission_classes = [permissions.IsAuthenticated,]
+    pagination_class = None
 
     def get_queryset(self):
         return self.request.user.assets.order_by('id')

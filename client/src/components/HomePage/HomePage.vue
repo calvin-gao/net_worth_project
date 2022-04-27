@@ -1,5 +1,6 @@
 <template>
     <button @click="goRegister">Register</button>
+    <button @click="goLogin">Login</button>
     <h1>Hello Home Page</h1>
 
     <li v-for="(item, index) in assets" :key="index">
@@ -30,10 +31,29 @@ import AssetForm from '../Form/AssetForm.vue';
 import PieChart  from '../PieChart/PieChart.vue';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/userStore';
+import axios from 'axios';
 
 const router = useRouter();
+const userStore = useUserStore();
+
 const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);
 const total = ref(new Total(0.0));
+
+
+const getAssets = () => {
+    console.log(userStore.token);
+    return axios.get('/api/assets/', {
+        headers: {
+            'Authorization': `Token ${userStore.token}`
+        }
+    }).then((response) => {
+        assets.value = response.data;
+    }).catch(() => {
+    })
+};
+
+getAssets();
 
 const addAssets = (asset) => {
     for (var i in assets.value) {
@@ -58,11 +78,16 @@ const getRunningSum = (assets) => {
     return runningSum;
 }
 
-total.value.currentSum = getRunningSum(assets.value);
 
 const goRegister = () => {
     router.push('/register');
 }
+
+const goLogin = () => {
+    router.push('/login');
+}
+
+total.value.currentSum = getRunningSum(assets.value);
 
 watch(
     assets,

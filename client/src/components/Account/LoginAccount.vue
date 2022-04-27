@@ -2,7 +2,7 @@
     <form @submit.prevent="createAccount">
         <input v-model="formData.username" placeholder="username">
         <input v-model="formData.password" type="password" placeholder="password">
-        <button type="submit">Submit</button>
+        <button type="submit">Login</button>
     </form>
 
 </template>
@@ -17,7 +17,7 @@ const userStore = useUserStore();
 const router = useRouter();
 
 const createAccount = () => {
-    axios.post('/api/register/', formData )
+    axios.post('/api/login/', formData )
     .then((response) => {
         userStore.setToken(response.data.token);
         router.push('/');

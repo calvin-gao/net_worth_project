@@ -1,5 +1,5 @@
 <template>
-<form action="" class="form-inline" ref="form" @submit="addAssets">
+<form action="" class="form-inline" ref="form" @submit.prevent="addAssets">
         <div class="form-group">
             <label>Asset Name: </label>
             <input type="text" class="form-control" v-model="state.name" placeholder="Name" />
@@ -37,8 +37,7 @@ const rules = computed(() => {
 
 const v = useVuelidate(rules, state, { $autoDirty: true });
 
-const addAssets = (event) => {
-    event.preventDefault();
+const addAssets = () => {
     if (v.value.$invalid) {
         return;
     }

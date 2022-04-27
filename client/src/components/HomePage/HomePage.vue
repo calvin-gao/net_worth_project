@@ -1,4 +1,5 @@
 <template>
+    <button @click="goRegister">Register</button>
     <h1>Hello Home Page</h1>
 
     <li v-for="(item, index) in assets" :key="index">
@@ -28,7 +29,9 @@ import { Asset, Total, titleCase } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import PieChart  from '../PieChart/PieChart.vue';
 import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);
 const total = ref(new Total(0.0));
 
@@ -56,6 +59,10 @@ const getRunningSum = (assets) => {
 }
 
 total.value.currentSum = getRunningSum(assets.value);
+
+const goRegister = () => {
+    router.push('/register');
+}
 
 watch(
     assets,

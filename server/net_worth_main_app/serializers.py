@@ -10,7 +10,7 @@ class AssetSerializer(serializers.ModelSerializer):
         prev_asset = Asset.objects.filter(user=user, name=validated_data['name'])
         if prev_asset.exists():
             prev_asset = prev_asset.first()
-            prev_asset.amount += validated_data['amount']
+            prev_asset.amount = validated_data['amount']
             prev_asset.save(update_fields=['amount'])
             return prev_asset
         else:

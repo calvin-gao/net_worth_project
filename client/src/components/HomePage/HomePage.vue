@@ -55,18 +55,37 @@ const getAssets = () => {
 
 getAssets();
 
-const addAssets = (asset) => {
+const addAssettoDB = async (asset) => {
+    await axios.post('/api/assets/', {...asset}, {
+        headers: {
+            'Authorization': `Token ${userStore.token}`
+        }
+    });
+}
+
+const addAssets = async (asset) => {
+    asset.name = titleCase(asset.name);
     for (var i in assets.value) {
         if (assets.value[i].name.toLowerCase() === asset.name.toLowerCase()) {
             assets.value[i].amount += asset.amount;
+            addAssettoDB(assets.value[i]);
             return;
         }
     }
-    asset.name = titleCase(asset.name);
+    addAssettoDB(asset);
     assets.value.push(asset);
 }
 
-const removeAsset = (index) => {
+const removeAsset = async (index) => {
+    if (userStore.token) {
+        await axios.delete(`/api/asset/${assets.value[index].name}/`, {
+            headers: {
+                'Authorization': `Token ${userStore.token}`
+            }
+        }).then(() => {
+            assets.value.splice(index, 1);
+        });
+    }
     assets.value.splice(index, 1);
 }
 

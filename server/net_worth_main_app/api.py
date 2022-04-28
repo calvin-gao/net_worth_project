@@ -27,7 +27,7 @@ class LoginAPI(generics.GenericAPIView):
             "token": AuthToken.objects.create(user)[1]
         })
         
-class AssetAPI(generics.ListCreateAPIView):
+class AssetListAPI(generics.ListCreateAPIView):
     serializer_class = AssetSerializer
     permission_classes = [permissions.IsAuthenticated,]
     pagination_class = None
@@ -46,3 +46,19 @@ class AssetAPI(generics.ListCreateAPIView):
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class AssetDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AssetSerializer
+    permission_classes = [permissions.IsAuthenticated,]
+    pagination_class = None
+
+    def get_queryset(self):
+        return self.request.user.assets.all()
+    
+    def get_object(self):
+        queryset = self.filter_queryset(self.get_queryset())
+        name = self.kwargs.get('name')
+        obj = queryset.filter(name=name).first()
+        if obj is None:
+            raise serializers.ValidationError("Asset not found.")
+        return obj

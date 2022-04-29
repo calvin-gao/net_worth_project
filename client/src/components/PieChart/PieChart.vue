@@ -3,9 +3,11 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
+import { useAssetStore } from '@/store/assetStore';
 
-const props = defineProps(['assets']);
+const assetStore = useAssetStore();
+
 
 const chartOptions = ref({
     plotOptions: {
@@ -18,12 +20,12 @@ const chartOptions = ref({
             }
         }
     },
-    labels: props.assets.map(asset => asset.name),
+    labels: assetStore.map(asset => asset.name),
 });
-const series = ref(props.assets.map(asset => asset.amount));
+const series = ref(assetStore.map(asset => asset.amount));
 
 watch(
-    () => props.assets,
+    () => assetStore.assets,
     (newAssets) => {
         series.value = newAssets.map(newAsset => newAsset.amount);
         chartOptions.value = {...chartOptions.value, labels: newAssets.map(newAsset => newAsset.name)};

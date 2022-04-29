@@ -3,7 +3,7 @@
     <button @click="goLogin">Login</button>
     <h1>Hello Home Page</h1>
 
-    <li v-for="(item, index) in assets" :key="index">
+    <li v-for="(item, index) in assetsStore.assets" :key="index">
         {{ item.name }} - {{ item.amount }}
         <button @click="removeAsset(index)">Remove</button>
     </li>
@@ -13,7 +13,7 @@
 
     <AssetForm @add-assets="addAssets"/>
     
-    <PieChart :assets="assets"/>
+    <PieChart />
 
     <!-- <div>
         <apexchart
@@ -26,30 +26,31 @@
 </template>
 
 <script setup>
-import { Asset, Total, titleCase } from '../../assets/helper/constants.js';
+import { Total, titleCase } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import PieChart  from '../PieChart/PieChart.vue';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
+import { useAssetStore } from '@/store/assetStore';
 import axios from 'axios';
 
 const router = useRouter();
 const userStore = useUserStore();
 
-const assets = ref([new Asset('Cash', 30.0), new Asset('Investments', 40.0), new Asset('Retirement', 30.0)]);
+const assetsStore = useAssetStore();
 const total = ref(new Total(0.0));
 
 
 const getAssets = () => {
-    console.log(userStore.token);
     return axios.get('/api/assets/', {
         headers: {
             'Authorization': `Token ${userStore.token}`
         }
     }).then((response) => {
-        assets.value = response.data;
+        assetsStore.setAssets(response.data);
     }).catch(() => {
+        assetsStore.setAssets([]);
     })
 };
 
@@ -65,28 +66,27 @@ const addAssettoDB = async (asset) => {
 
 const addAssets = async (asset) => {
     asset.name = titleCase(asset.name);
-    for (var i in assets.value) {
-        if (assets.value[i].name.toLowerCase() === asset.name.toLowerCase()) {
-            assets.value[i].amount += asset.amount;
-            addAssettoDB(assets.value[i]);
+    for (var i in assetsStore.assets) {
+        if (assetsStore.assets[i].name.toLowerCase() === asset.name.toLowerCase()) {
+            asset.amount += assetsStore.assets[i].amount;
+            await addAssettoDB(asset);
+            assetsStore.updateAsset(i, asset);
             return;
         }
     }
-    addAssettoDB(asset);
-    assets.value.push(asset);
+    await addAssettoDB(asset);
+    assetsStore.addAsset(asset);
 }
 
 const removeAsset = async (index) => {
     if (userStore.token) {
-        await axios.delete(`/api/asset/${assets.value[index].name}/`, {
+        await axios.delete(`/api/asset/${assetsStore.assets[index].name}/`, {
             headers: {
                 'Authorization': `Token ${userStore.token}`
             }
-        }).then(() => {
-            assets.value.splice(index, 1);
         });
     }
-    assets.value.splice(index, 1);
+    assetsStore.removeAsset(index);
 }
 
 const getRunningSum = (assets) => {
@@ -106,10 +106,10 @@ const goLogin = () => {
     router.push('/login');
 }
 
-total.value.currentSum = getRunningSum(assets.value);
+total.value.currentSum = getRunningSum(assetsStore.assets);
 
 watch(
-    assets,
+    () => assetsStore.assets,
     (newAssets) => {
         total.value.currentSum = getRunningSum(newAssets);
     },

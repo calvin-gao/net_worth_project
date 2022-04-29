@@ -25,7 +25,6 @@ const router = createRouter({
 const pinia = createPinia();
 
 let app = createApp(App);
-console.log(app);
 app.use(router)
 .use(VueApexCharts)
 .use(pinia)

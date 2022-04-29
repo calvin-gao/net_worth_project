@@ -3,8 +3,20 @@ export class Asset {
   amount = 0.0;
 
   constructor(name, amount) {
+    if (typeof name === "object") {
+      this.name = name.name;
+      this.amount = name.amount;
+      return;
+    }
     this.name = name;
     this.amount = amount;
+  }
+
+  toString() {
+    return JSON.stringify({
+      "name": this.name, 
+      "amount": this.amount
+    });
   }
 }
 

@@ -1,13 +1,26 @@
 <template>
-    <button @click="goRegister">Register</button>
-    <button @click="goLogin">Login</button>
-    <h1>Hello Home Page</h1>
+    <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mx-5" role="group" aria-label="First group">
+            <button type="button" class="btn btn-primary" @click="goRegister">Register</button>
+        </div>
+        <div class="btn-group mx-5" role="group" aria-label="Second group">
+            <button type="button" class="btn btn-primary" @click="goLogin">Login</button>
+        </div>
+        <div class="btn-group mx-5" role="group" aria-label="Third group">
+        <button type="button" class="btn btn-primary" @click="goLogout">Logout</button>
+        </div>
+    </div>
+
+    <h1>Net Worth Pie Visualizer</h1>
+    <h2>Hello, {{ userStore.user?.username ?? "Guest" }}</h2>
+
+    <h3>Name            |  Value</h3>
 
     <li v-for="(_, index) in assetsStore.assets" :key="index">
         <AssetElement :index="index" />
     </li>
 
-    <h1>The current runningSum is {{ assetsStore.getRunningTotal() }} </h1>
+    <!-- <h1>The current runningSum is {{ assetsStore.getRunningTotal() }} </h1> -->
 
 
     <AssetForm @add-assets="addAssets"/>
@@ -48,6 +61,7 @@ const getAssets = () => {
     }).then((response) => {
         assetsStore.setAssets(response.data);
     }).catch(() => {
+        userStore.reset();
         assetsStore.setAssets([]);
     })
 };
@@ -83,6 +97,18 @@ const goRegister = () => {
 
 const goLogin = () => {
     router.push('/login');
+}
+
+const goLogout = () => {
+    return axios.post('/api/logout/', {
+        headers: {
+            'Authorization': `Token ${userStore.token}`
+        }
+    }).finally(() => {
+        userStore.reset();
+        assetsStore.setAssets([]);
+        router.push('/');
+    });
 }
 
 </script>

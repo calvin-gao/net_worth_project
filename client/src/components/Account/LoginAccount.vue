@@ -20,6 +20,7 @@ const createAccount = () => {
     axios.post('/api/login/', formData )
     .then((response) => {
         userStore.setToken(response.data.token);
+        userStore.setUser(response.data.user);
         router.push('/');
     })
     .catch((error) => {

@@ -30,24 +30,28 @@ const removeAsset = async (index) => {
     assetsStore.removeAsset(index);
 }
 
-async function updateAsset() {
-    if (_.isEqual(formData, pastFormData)) {
-        return;
-    }
 
-    var response = undefined;
-    if (userStore.token) {
-        response =  await axios.put(`/api/asset/${formData.id}/`, formData, {
-            headers: {
-                'Authorization': `Token ${userStore.token}`
+watch(
+    () => formData, 
+    (formData, pastFormData) => {
+        (async () => {
+            if (_.isEqual(formData, pastFormData)) {
+                return;
             }
-        });
-    }
-    assetsStore.updateAsset(props.index, response?.data ?? {...formData});
-    for (const [key, value] of Object.entries(formData)) {
-        pastFormData[key] = value;
-    }
-}
+    
+            var response = undefined;
+            if (userStore.token) {
+                response =  await axios.put(`/api/asset/${formData.id}/`, formData, {
+                    headers: {
+                        'Authorization': `Token ${userStore.token}`
+                    }
+                });
+            }
+            assetsStore.updateAsset(props.index, response?.data ?? {...formData}); // if guest otherwise use form data
+        })();
+    }, 
+    { deep: true });
+    
 
 watch(
     () => assetsStore.assets[props.index],

@@ -1,4 +1,4 @@
-import { createApp} from 'vue';
+import Vue, { createApp } from 'vue';
 import App from './App.vue';
 // import HelloWorld from './components/HelloWorld.vue';
 import HomePage from './components/HomePage/HomePage.vue';
@@ -7,6 +7,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import RegisterAccount from './components/Account/RegisterAccount.vue';
 import LoginAccount from './components/Account/LoginAccount.vue';
 import { createPinia } from 'pinia';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 
 const routes = [
     { path: '/', component: HomePage },
@@ -29,5 +31,6 @@ app.use(router)
 .use(VueApexCharts)
 .use(pinia)
 .mount('#app');
+
 // app.config.globalProperties.$runningSum = 0.0
 

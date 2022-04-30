@@ -3,12 +3,11 @@
     <button @click="goLogin">Login</button>
     <h1>Hello Home Page</h1>
 
-    <li v-for="(item, index) in assetsStore.assets" :key="index">
-        {{ item.name }} - {{ item.amount }}
-        <button @click="removeAsset(index)">Remove</button>
+    <li v-for="(_, index) in assetsStore.assets" :key="index">
+        <AssetElement :index="index" />
     </li>
 
-    <h1>The current runningSum is {{ total.currentSum }} </h1>
+    <h1>The current runningSum is {{ assetsStore.getRunningTotal() }} </h1>
 
 
     <AssetForm @add-assets="addAssets"/>
@@ -26,10 +25,10 @@
 </template>
 
 <script setup>
-import { Total, titleCase } from '../../assets/helper/constants.js';
+import { titleCase } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import PieChart  from '../PieChart/PieChart.vue';
-import { ref, watch } from 'vue';
+import AssetElement from '../AssetElement/AssetElement.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/userStore';
 import { useAssetStore } from '@/store/assetStore';
@@ -39,7 +38,6 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const assetsStore = useAssetStore();
-const total = ref(new Total(0.0));
 
 
 const getAssets = () => {
@@ -57,46 +55,27 @@ const getAssets = () => {
 getAssets();
 
 const addAssettoDB = async (asset) => {
-    await axios.post('/api/assets/', {...asset}, {
-        headers: {
-            'Authorization': `Token ${userStore.token}`
-        }
-    });
-}
-
-const addAssets = async (asset) => {
-    asset.name = titleCase(asset.name);
-    for (var i in assetsStore.assets) {
-        if (assetsStore.assets[i].name.toLowerCase() === asset.name.toLowerCase()) {
-            asset.amount += assetsStore.assets[i].amount;
-            await addAssettoDB(asset);
-            assetsStore.updateAsset(i, asset);
-            return;
-        }
-    }
-    await addAssettoDB(asset);
-    assetsStore.addAsset(asset);
-}
-
-const removeAsset = async (index) => {
     if (userStore.token) {
-        await axios.delete(`/api/asset/${assetsStore.assets[index].name}/`, {
+        return await axios.post('/api/assets/', asset, {
             headers: {
                 'Authorization': `Token ${userStore.token}`
             }
         });
     }
-    assetsStore.removeAsset(index);
+    return undefined;
 }
 
-const getRunningSum = (assets) => {
-    let runningSum = 0.0;
-    for (let i = 0; i < assets.length; i++) {
-        runningSum = runningSum + assets[i].amount
+const addAssets = async (asset) => {
+    asset.name = titleCase(asset.name);
+    const response = await addAssettoDB(asset);
+    for (var i in assetsStore.assets) {
+        if (assetsStore.assets[i].name.toLowerCase() === asset.name.toLowerCase()) {
+            assetsStore.updateAsset(i, response?.data ?? asset);
+            return;
+        }
     }
-    return runningSum;
+    assetsStore.addAsset(response?.data ?? asset);
 }
-
 
 const goRegister = () => {
     router.push('/register');
@@ -105,16 +84,6 @@ const goRegister = () => {
 const goLogin = () => {
     router.push('/login');
 }
-
-total.value.currentSum = getRunningSum(assetsStore.assets);
-
-watch(
-    () => assetsStore.assets,
-    (newAssets) => {
-        total.value.currentSum = getRunningSum(newAssets);
-    },
-    { deep: true }
-);
 
 </script>
 

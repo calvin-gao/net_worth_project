@@ -17,6 +17,13 @@ class AssetSerializer(serializers.ModelSerializer):
             asset = Asset.objects.create(user=user, **validated_data)
         return asset
     
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        prev_asset = Asset.objects.filter(user=user, name=validated_data['name'])
+        if prev_asset.exists():
+            prev_asset.first().delete()
+        return super().update(instance, validated_data)
+    
     class Meta:
         model = Asset
         fields = ('id', 'name', 'amount')

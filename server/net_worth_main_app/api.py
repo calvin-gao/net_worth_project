@@ -1,3 +1,4 @@
+from cgitb import lookup
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 from knox.models import AuthToken
@@ -51,14 +52,7 @@ class AssetDetailAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AssetSerializer
     permission_classes = [permissions.IsAuthenticated,]
     pagination_class = None
+    lookup_field = 'id'
 
     def get_queryset(self):
         return self.request.user.assets.all()
-    
-    def get_object(self):
-        queryset = self.filter_queryset(self.get_queryset())
-        name = self.kwargs.get('name')
-        obj = queryset.filter(name=name).first()
-        if obj is None:
-            raise serializers.ValidationError("Asset not found.")
-        return obj

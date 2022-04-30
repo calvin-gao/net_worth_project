@@ -9,5 +9,5 @@ urlpatterns = [
     path('register/', RegistrationAPI.as_view()),
     path('login/', LoginAPI.as_view()),
     path('assets/', AssetListAPI.as_view()),
-    path('asset/<str:name>/', AssetDetailAPI.as_view()),
+    path('asset/<int:id>/', AssetDetailAPI.as_view()),
 ]

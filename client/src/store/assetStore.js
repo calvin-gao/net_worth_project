@@ -13,11 +13,11 @@ export const useAssetStore = defineStore('assetStore', {
     getters: {},
     actions: {
         setAssets(newAssets) {
-            this.assets = newAssets.map(asset => new Asset(asset.name, asset.amount));
+            this.assets = newAssets;
             localStorage.setItem('asset-user', JSON.stringify(newAssets));
         },
         addAsset(newAsset) {
-            this.assets.push(new Asset(newAsset));
+            this.assets.push(newAsset);
             localStorage.setItem('asset-user', JSON.stringify(this.assets));
         },
         removeAsset(index) {
@@ -25,8 +25,23 @@ export const useAssetStore = defineStore('assetStore', {
             localStorage.setItem('asset-user', JSON.stringify(this.assets));
         },
         updateAsset(index, newAsset) {
-            this.assets[index] = new Asset(newAsset);
+            for (var i in this.assets) {
+                if (this.assets[i].name == newAsset.name) {
+                    this.assets[i].amount = newAsset.amount;
+                    if (i != index) {
+                        this.assets.splice(index, 1);
+                    }
+                    break;
+                }
+            }
             localStorage.setItem('asset-user', JSON.stringify(this.assets));
+        },
+        getRunningTotal() {
+            let total = 0.0;
+            for (var i in this.assets) {
+                total += this.assets[i].amount;
+            }
+            return total;
         },
         map(callback) {
             var mapping = [];

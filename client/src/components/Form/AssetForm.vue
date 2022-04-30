@@ -6,7 +6,7 @@
         </div>
         <div class="form-group">
             <label>Amount: </label>    
-            <input type="text" class="form-control" v-model="state.amount" placeholder="Amount" />   
+            <input class="form-control" v-model="state.amount" placeholder="Amount" />   
         </div>
         <p v-for="error of v.$errors" :key="error.$uid">
             {{ error.$property }} - {{ error.$message }}
@@ -16,12 +16,12 @@
 </template>
 
 <script setup>
-import { Asset } from '../../assets/helper/constants.js';
-import { defineEmits, reactive, computed } from 'vue';
+import { defineEmits, reactive, computed, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, numeric } from '@vuelidate/validators';
 
 const emit = defineEmits('add-assets');
+const form = ref(null);
 
 const state = reactive({
     name: '',
@@ -35,13 +35,16 @@ const rules = computed(() => {
     }
 });
 
-const v = useVuelidate(rules, state, { $autoDirty: true });
+const v = useVuelidate(rules, state, { $autoDirty: true, $lazy: true });
 
 const addAssets = () => {
-    if (v.value.$invalid) {
+    if (!v.value.$validate()) {
         return;
     }
-    emit('add-assets', new Asset(state.name, parseFloat(state.amount)));
+    emit('add-assets', {name: state.name.trim(), amount: parseInt(state.amount)});
+    state.name = '';
+    state.amount = 0;
+    v.value.$reset();
 }
 
 </script>

@@ -19,7 +19,7 @@ const router = useRouter();
 const createAccount = () => {
     axios.post('/api/register/', formData )
     .then((response) => {
-        userStore.setToken(response.data.token);
+        userStore.setData(response.data);
         router.push('/');
     })
     .catch((error) => {

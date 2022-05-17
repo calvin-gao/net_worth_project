@@ -1,17 +1,21 @@
 <template>
 <form action="" class="form-inline" ref="form" @submit.prevent="addAssets">
-        <div class="form-group">
-            <label>Asset Name: </label>
+    <div :class='["p-4", "border-custom-form", v.$errors.length && "border-custom-warning" ]'>
+        <div class="input-group mb-2">
+            <span class="input-group-text">Asset Name</span>
             <input type="text" class="form-control" v-model="state.name" placeholder="Name" />
         </div>
-        <div class="form-group">
-            <label>Amount: </label>    
+        <div class="input-group mb-2">
+            <span class="input-group-text">Amount</span>    
             <input class="form-control" v-model="state.amount" placeholder="Amount" />   
         </div>
-        <p v-for="error of v.$errors" :key="error.$uid">
-            {{ error.$property }} - {{ error.$message }}
-        </p>
-    <button type="submit" class="btn btn-default">Submit</button>
+        <template v-if="v.$errors.length != 0">
+            <p v-for="error of v.$errors" :key="error.$uid" class="text-danger align-middle mb-1">
+                {{ error.$property }} - {{ error.$message }}
+            </p>
+        </template>
+        <button type="submit" class="btn btn-primary" v-else>Submit</button>
+    </div>
 </form>
 </template>
 
@@ -41,10 +45,18 @@ const addAssets = () => {
     if (!v.value.$validate()) {
         return;
     }
-    emit('add-assets', {name: state.name.trim(), amount: parseInt(state.amount)});
+    emit('add-assets', {name: state.name.trim(), amount: parseFloat(state.amount)});
     state.name = '';
     state.amount = 0;
     v.value.$reset();
 }
 
 </script>
+
+<style>
+.border-custom-form {
+    border-color: green !important;
+    border-radius: 5px 15px;
+    border: 1px solid;
+}
+</style>

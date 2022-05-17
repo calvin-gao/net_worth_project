@@ -1,31 +1,29 @@
 <template>
-    <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mx-5" role="group" aria-label="First group">
-            <button type="button" class="btn btn-primary" @click="goRegister">Register</button>
-        </div>
-        <div class="btn-group mx-5" role="group" aria-label="Second group">
-            <button type="button" class="btn btn-primary" @click="goLogin">Login</button>
-        </div>
-        <div class="btn-group mx-5" role="group" aria-label="Third group">
-        <button type="button" class="btn btn-primary" @click="goLogout">Logout</button>
-        </div>
-    </div>
+    <NavBar></NavBar>
 
     <h1>Net Worth Pie Visualizer</h1>
     <h2>Hello, {{ userStore.user?.username ?? "Guest" }}</h2>
 
-    <h3>Name            |  Value</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col border-end">
 
-    <li v-for="(_, index) in assetsStore.assets" :key="index">
-        <AssetElement :index="index" />
-    </li>
+                <!-- <h1>The current runningSum is {{ assetsStore.getRunningTotal() }} </h1> -->
+                <AssetForm class="mb-2" @add-assets="addAssets"/>
 
-    <!-- <h1>The current runningSum is {{ assetsStore.getRunningTotal() }} </h1> -->
-
-
-    <AssetForm @add-assets="addAssets"/>
-    
-    <PieChart />
+                <template v-if="assetsStore.assets.length != 0">
+                    <h3>Current Assets</h3>
+                    <hr/>
+                </template>
+                <template v-for="(_, index) in assetsStore.assets" :key="index">
+                    <AssetElement class="mb-2" :index="index" />
+                </template>
+            </div>
+            <div class="col">
+                <PieChart />
+            </div>
+        </div>
+    </div>
 
     <!-- <div>
         <apexchart
@@ -42,12 +40,11 @@ import { titleCase } from '../../assets/helper/constants.js';
 import AssetForm from '../Form/AssetForm.vue';
 import PieChart  from '../PieChart/PieChart.vue';
 import AssetElement from '../AssetElement/AssetElement.vue';
-import { useRouter } from 'vue-router';
+import NavBar from '../NavBar/NavBar.vue';
 import { useUserStore } from '@/store/userStore';
 import { useAssetStore } from '@/store/assetStore';
 import axios from 'axios';
 
-const router = useRouter();
 const userStore = useUserStore();
 
 const assetsStore = useAssetStore();
@@ -91,30 +88,13 @@ const addAssets = async (asset) => {
     assetsStore.addAsset(response?.data ?? asset);
 }
 
-const goRegister = () => {
-    router.push('/register');
-}
-
-const goLogin = () => {
-    router.push('/login');
-}
-
-const goLogout = () => {
-    return axios.post('/api/logout/', {
-        headers: {
-            'Authorization': `Token ${userStore.token}`
-        }
-    }).finally(() => {
-        userStore.reset();
-        assetsStore.setAssets([]);
-        router.push('/');
-    });
-}
-
 </script>
 
 <style>
 h1 {
     color: black;
+}
+.border-custom-warning {
+    border-color: red !important;
 }
 </style>

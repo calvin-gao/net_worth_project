@@ -1,4 +1,4 @@
-import Vue, { createApp } from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
 // import HelloWorld from './components/HelloWorld.vue';
 import HomePage from './components/HomePage/HomePage.vue';

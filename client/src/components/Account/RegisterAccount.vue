@@ -2,21 +2,23 @@
 <NavBar/>
 <div class="container-fluid">
     <div class="row">
-        <form @submit.prevent="createAccount" :class='["m-4 p-4", "col-4 mx-auto", "border-custom-form", error && "border-custom-warning" ]'>
-            <div class="text-danger mb-3" v-if="error">{{ error }}</div>
-            <div class="form-floating mb-3">
-                <input class="form-control" v-model="formData.username" placeholder="username"/>
-                <label>Username</label>
+        <form @submit.prevent="createAccount" class="col-4 m-4 mx-auto">
+            <div :class='["p-4 border-custom-form", error && "border-custom-form-warning" ]'>
+                <div class="text-danger mb-3" v-if="error">{{ error }}</div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" v-model="formData.username" placeholder="username"/>
+                    <label>Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" v-model="formData.password" type="password" placeholder="password"/>
+                    <label>Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input class="form-control" v-model="formData.password_verify" type="password" placeholder="verify password"/>
+                    <label>Verify Password</label>
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input class="form-control" v-model="formData.password" type="password" placeholder="password"/>
-                <label>Password</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input class="form-control" v-model="formData.password_verify" type="password" placeholder="verify password"/>
-                <label>Verify Password</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="btn btn-primary w-100 border-submit-form btn-success" v-if="!error">Register</button>
         </form>
     </div>
 </div>

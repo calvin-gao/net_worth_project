@@ -94,7 +94,4 @@ const addAssets = async (asset) => {
 h1 {
     color: black;
 }
-.border-custom-warning {
-    border-color: red !important;
-}
 </style>

@@ -1,20 +1,22 @@
 <template>
-    <div :class='["p-4", "border-custom", v.$errors.length && "border-custom-warning" ]'>
-        <div class="input-group mb-3">
-            <span class="input-group-text">Name</span>
-            <input class="form-control" type="text" v-model.trim="formData.name" @input="updateAsset"/>
+    <div class="mb-3">
+        <button class="btn w-100 btn-outline-danger border-delete" @click.prevent="removeAsset(props.index)">Remove</button>
+        <div :class='["p-4 border-custom", v.$errors.length && "border-custom-warning" ]'>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Name</span>
+                <input class="form-control" type="text" v-model.trim="formData.name" @input="updateAsset"/>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">Amount</span>
+                <span class="input-group-text">$</span>
+                <input class="form-control" v-model="formData.amount" @input="updateAsset"/>
+            </div>
+            <template v-if="v.$errors.length != 0">
+                <p v-for="error of v.$errors" :key="error.$uid" class="text-danger align-middle mb-1">
+                    {{ error.$property }} - {{ error.$message }}
+                </p>
+            </template>
         </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">Amount</span>
-            <span class="input-group-text">$</span>
-            <input class="form-control" v-model="formData.amount" @input="updateAsset"/>
-        </div>
-        <template v-if="v.$errors.length != 0">
-            <p v-for="error of v.$errors" :key="error.$uid" class="text-danger align-middle mb-1">
-                {{ error.$property }} - {{ error.$message }}
-            </p>
-        </template>
-        <button class="btn btn-outline-secondary" @click.prevent="removeAsset(props.index)">Remove</button>
     </div>
 </template>
 
@@ -95,7 +97,14 @@ watch(
 <style>
 .border-custom {
     border-color: #ffd700 !important;
-    border-radius: 5px 15px;
+    border-radius: 0px 0px 5px 15px;
     border: 1px solid;
+    border-top: none;
+}
+.border-delete {
+    border-radius: 5px 15px 0px 0px !important;
+}
+.border-custom-warning {
+    border-color: red !important;
 }
 </style>

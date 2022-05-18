@@ -1,12 +1,13 @@
 <template>
 <form action="" class="form-inline" ref="form" @submit.prevent="addAssets">
-    <div :class='["p-4", "border-custom-form", v.$errors.length && "border-custom-warning" ]'>
+    <div :class='["p-4", "border-custom-form", v.$errors.length && "border-custom-form-warning" ]'>
         <div class="input-group mb-2">
             <span class="input-group-text">Asset Name</span>
             <input type="text" class="form-control" v-model="state.name" placeholder="Name" />
         </div>
         <div class="input-group mb-2">
-            <span class="input-group-text">Amount</span>    
+            <span class="input-group-text">Amount</span>
+            <span class="input-group-text">$</span> 
             <input class="form-control" v-model="state.amount" placeholder="Amount" />   
         </div>
         <template v-if="v.$errors.length != 0">
@@ -14,8 +15,8 @@
                 {{ error.$property }} - {{ error.$message }}
             </p>
         </template>
-        <button type="submit" class="btn btn-primary" v-else>Submit</button>
     </div>
+    <button type="submit" class="btn btn-primary w-100 border-submit-form btn-success" v-if="v.$errors.length == 0">Submit</button>
 </form>
 </template>
 
@@ -56,7 +57,14 @@ const addAssets = () => {
 <style>
 .border-custom-form {
     border-color: green !important;
-    border-radius: 5px 15px;
+    border-radius: 5px 15px 0px 0px;
     border: 1px solid;
+}
+.border-custom-form-warning {
+    border-radius: 5px 15px;
+    border-color: red !important;
+}
+.border-submit-form {
+    border-radius: 0px 0px 5px 15px !important;
 }
 </style>
